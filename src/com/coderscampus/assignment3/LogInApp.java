@@ -10,10 +10,12 @@ public class LogInApp {
         final int MAX_ATTEMPTS = 5;
         String username;
         String password;
+        User isValid = null;
         Scanner scanner = new Scanner(System.in);
 
         UserService userService = new UserService();
-        List<User> users = userService.readUsersFromFile("data.txt");
+        User[] users;
+        users = userService.userService("data.txt");
 
         while(attempts < MAX_ATTEMPTS){
 
@@ -23,9 +25,10 @@ public class LogInApp {
             System.out.println("Enter password: ");
             password = scanner.nextLine();
 
-            boolean isValid = userService.validateUser(username, password,users);
+            isValid = userService.validateUser(users,username, password);
 
-            if(isValid){
+            if(isValid != null){
+                System.out.println("Welcome " + isValid.getName());
                 break;
             } else {
                 attempts++;

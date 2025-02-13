@@ -1,47 +1,44 @@
 package com.coderscampus.assignment3;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class UserService {
 
-  public List<User> readUsersFromFile(String fileName){
-      List<User> users = new ArrayList<>();
+    public User[] userService(String fileName){
 
-      try(BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName))){
-          String line;
+        User[] users = new User[4];
 
-          while((line = bufferedReader.readLine()) != null) {
+        try{
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(fileName));
+            String line;
+            int index = 0;
+            while ((line = bufferedReader.readLine()) != null){
+                String[] splitLine = line.split(",");
+                String username = splitLine[0];
+                String password = splitLine[1];
+                String name = splitLine[2];
+                User user = new User(username,password,name);
+                users[index] = user;
+                index++;
+            }
+        } catch (FileNotFoundException e){
+            System.err.println("File not found " + fileName);
+        } catch (IOException e){
+            System.err.println("IOException " + e);
+        }
+        return users;
+    }
 
-              String[] userData = line.split(",");
 
-              if(userData.length == 3){
-                  String username = userData[0].trim();
-                  String password = userData[1].trim();
-                  String name = userData[2].trim();
-                  users.add(new User(username,password,name));
-              }
-
-          }
-      } catch (IOException e) {
-          System.err.println("Error reading file");
-      }
-
-      return users;
-
-  }
-
-  public boolean validateUser(String inputUsername, String inputPassword, List<User> users) {
-      for(User user: users){
-        if(user.getUsername().equalsIgnoreCase(inputUsername) && user.getPassword().equalsIgnoreCase(inputPassword)) {
-              System.out.println("Welcome: " + user.getName());
-              return true;
-          }
-      }
-      return false;
-  }
-
+    public static User validateUser(User[] users, String username, String password) {
+        for(User user: users){
+           if(user != null && user.getUsername().equals(username) && user.getPassword().equals(password)){
+               return user;
+           }
+       }
+       return null;
+    }
 }
