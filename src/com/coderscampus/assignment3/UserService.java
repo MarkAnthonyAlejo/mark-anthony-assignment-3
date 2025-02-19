@@ -35,7 +35,7 @@ public class UserService {
 
     public static User validateUser(User[] users, String username, String password) {
         for(User user: users){
-           if(user != null && user.getUsername().equals(username) && user.getPassword().equals(password)){
+           if(user != null && user.getUsername().equalsIgnoreCase(username) && user.getPassword().equals(password)){
                return user;
            }
        }
